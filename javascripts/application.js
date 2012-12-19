@@ -35,7 +35,25 @@ Board.prototype.setTile = function (position, tile) {
 };
 
 Board.prototype.isSolved = function () {
-  return JSON.stringify(this.state) == JSON.stringify(this.puzzle);
+  var normalizedState = JSON.parse(JSON.stringify(this.state)); // deep copy
+
+  var connections = [];
+
+  for (var row = 0; row < normalizedState.length; row++) {
+    for (var column = 0; column < normalizedState[row].length; column++) {
+      connections[normalizedState[row][column]] = this.puzzle[row][column];
+    }
+  }
+
+  for (var row = 0; row < normalizedState.length; row++) {
+    for (var column = 0; column < normalizedState[row].length; column++) {
+      if (normalizedState[row][column] > Tile.WHITE) {
+        normalizedState[row][column] = connections[normalizedState[row][column]];
+      }
+    }
+  }
+
+  return JSON.stringify(normalizedState) == JSON.stringify(this.puzzle);
 };
 
 var TilePicker = function () {
