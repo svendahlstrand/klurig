@@ -109,7 +109,7 @@ var board = new Board(puzzle);
 var view = new View(board);
 var tilePicker = new TilePicker();
 
-tilePicker.current = Tile.GREEN;
+tilePicker.current = Tile.RED;
 
 view.element.addEventListener('click', handleInteraction);
 view.element.addEventListener('touchstart', handleInteraction);
