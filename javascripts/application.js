@@ -56,6 +56,7 @@ var View = function (board) {
   html = '<div id="board">' + html + '</div>';
 
   this.canvas.innerHTML = html;
+  this.element = document.getElementById('board');
 };
 
 View.prototype.update = function () {
@@ -72,12 +73,22 @@ View.prototype.update = function () {
 
 /* Main */
 
+function handleInteraction(e) {
+  var element = e.toElement || e.target;
+
+  if (element.classList.contains('tile')) {
+    var position = element.attributes['data-position'].value;
+
+    board.setTile(position, Tile.RED)
+    view.update();
+  }
+}
+
 /*
  0: no tile (slot)
  1: empty tile
 >1: colored tile
 */
-
 var puzzle = [
   [2, 2, 2],
   [3, 4, 0],
@@ -88,15 +99,5 @@ var puzzle = [
 var board = new Board(puzzle);
 var view = new View(board);
 
-function handleInteraction(e) {
-  var element = e.toElement || e.target;
-
-  if (element.classList.contains('tile')) {
-    var position = element.attributes['data-position'].value;
-    board.setTile(position, Tile.RED)
-    view.update();
-  }
-}
-
-document.addEventListener('click', handleInteraction);
-document.addEventListener('touchstart', handleInteraction);
+view.element.addEventListener('click', handleInteraction);
+view.element.addEventListener('touchstart', handleInteraction);
