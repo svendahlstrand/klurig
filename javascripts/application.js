@@ -41,14 +41,14 @@ var View = function (board) {
   var html = '';
   for (var row = 0; row < this.board.state.length; row++) {
     for (var column = 0; column < this.board.state[row].length; column++) {
-      var isTile = this.board.state[row][column];
+      var tile = this.board.state[row][column];
       var position = String.fromCharCode(row + 65) + (column + 1);
 
-      if (isTile) {
-        html += '<div class="tile color-' + isTile + '" data-position="' + position + '"></div>';
+      if (tile == Tile.EMPTY) {
+        html += '<div class="slot" data-position="' + position + '"></div>';
       }
       else {
-        html += '<div class="slot" data-position="' + position + '"></div>';
+        html += '<div class="tile color-' + tile + '" data-position="' + position + '"></div>';
       }
     }
   }
