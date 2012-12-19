@@ -68,6 +68,8 @@ Board.prototype.setTile = function (position, tile) {
   this.state[row][column] = tile;
 };
 
+
+
 /* Main */
 
 /*
@@ -86,11 +88,15 @@ var puzzle = [
 var board = new Board(puzzle);
 board.setUp(document.getElementsByTagName("body")[0]);
 
-window.onmouseup = function (e) {
-  var element = e.toElement;
+function handleInteraction(e) {
+  var element = e.toElement || e.target;
+
   if (element.classList.contains('tile')) {
     var position = element.attributes['data-position'].value;
     board.setTile(position, Tile.RED)
     board.update();
   }
 }
+
+document.addEventListener('click', handleInteraction);
+document.addEventListener('touchstart', handleInteraction);
