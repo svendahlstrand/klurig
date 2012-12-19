@@ -8,18 +8,13 @@ var Tile = {
 
 var Board = function (puzzle) {
   this.puzzle = puzzle;
-  this.state = [];
+  this.state = JSON.parse(JSON.stringify(puzzle)); // deep copy
 
   // Reset board state to show blank tiles
-  for (var row = 0; row < this.puzzle.length; row++) {
-    this.state[row] = [];
-
-    for (var column = 0; column < this.puzzle[row].length; column++) {
-      if (this.puzzle[row][column] > Tile.EMPTY) {
+  for (var row = 0; row < this.state.length; row++) {
+    for (var column = 0; column < this.state[row].length; column++) {
+      if (this.state[row][column] > Tile.EMPTY) {
         this.state[row][column] = Tile.WHITE;
-      }
-      else {
-        this.state[row][column] = Tile.EMPTY;
       }
     }
   }
