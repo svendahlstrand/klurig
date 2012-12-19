@@ -20,17 +20,15 @@ var Board = function (puzzle) {
   }
 };
 
-Board.ROW_LABELS = { 'A': 0, 'B': 1, 'C': 2, 'D': 3 };
-
 Board.prototype.getTile = function (position) {
-  var row = Board.ROW_LABELS[position[0]];
+  var row = position.charCodeAt(0) - 65;
   var column = position[1] - 1;
 
   return this.state[row][column];
 };
 
 Board.prototype.setTile = function (position, tile) {
-  var row = Board.ROW_LABELS[position[0]];
+  var row = position.charCodeAt(0) - 65;
   var column = position[1] - 1;
 
   this.state[row][column] = tile;
