@@ -22,39 +22,6 @@ var Board = function (puzzle) {
 
 Board.ROW_LABELS = { 'A': 0, 'B': 1, 'C': 2, 'D': 3 };
 
-Board.prototype.setUp = function (element) {
-  var html = '';
-  for (var row = 0; row < this.state.length; row++) {
-    for (var column = 0; column < this.state[row].length; column++) {
-      var isTile = this.state[row][column];
-      var position = String.fromCharCode(row + 65) + (column + 1);
-
-      if (isTile) {
-        html += '<div class="tile color-' + isTile + '" data-position="' + position + '"></div>';
-      }
-      else {
-        html += '<div class="slot" data-position="' + position + '"></div>';
-      }
-    }
-  }
-
-  html = '<div id="board">' + html + '</div>';
-
-  element.innerHTML = html;
-};
-
-Board.prototype.update = function () {
-  var tiles = document.getElementById('board').getElementsByTagName('div');
-  for (var i = 0; i < tiles.length; i++) {
-    var tile = tiles[i];
-
-    if (!tile.classList.contains('tile')) { continue; }
-
-    var position = tile.attributes['data-position'].value;
-    tile.setAttribute('class', 'tile color-' + this.getTile(position))
-  }
-}
-
 Board.prototype.getTile = function (position) {
   var row = Board.ROW_LABELS[position[0]];
   var column = position[1] - 1;
@@ -69,7 +36,43 @@ Board.prototype.setTile = function (position, tile) {
   this.state[row][column] = tile;
 };
 
+var View = function (canvas, board) {
+  this.board = board;
+  this.canvas = canvas;
+};
 
+View.prototype.initialize = function () {
+  var html = '';
+  for (var row = 0; row < this.board.state.length; row++) {
+    for (var column = 0; column < this.board.state[row].length; column++) {
+      var isTile = this.board.state[row][column];
+      var position = String.fromCharCode(row + 65) + (column + 1);
+
+      if (isTile) {
+        html += '<div class="tile color-' + isTile + '" data-position="' + position + '"></div>';
+      }
+      else {
+        html += '<div class="slot" data-position="' + position + '"></div>';
+      }
+    }
+  }
+
+  html = '<div id="board">' + html + '</div>';
+
+  this.canvas.innerHTML = html;
+}
+
+View.prototype.update = function () {
+  var tiles = this.canvas.getElementsByTagName('div');
+  for (var i = 0; i < tiles.length; i++) {
+    var tile = tiles[i];
+
+    if (!tile.classList.contains('tile')) { continue; }
+
+    var position = tile.attributes['data-position'].value;
+    tile.setAttribute('class', 'tile color-' + this.board.getTile(position))
+  }
+}
 
 /* Main */
 
@@ -87,7 +90,9 @@ var puzzle = [
 ];
 
 var board = new Board(puzzle);
-board.setUp(document.getElementsByTagName("body")[0]);
+var view = new View(document.getElementsByTagName("body")[0], board);
+
+view.initialize();
 
 function handleInteraction(e) {
   var element = e.toElement || e.target;
@@ -95,7 +100,7 @@ function handleInteraction(e) {
   if (element.classList.contains('tile')) {
     var position = element.attributes['data-position'].value;
     board.setTile(position, Tile.RED)
-    board.update();
+    view.update();
   }
 }
 
