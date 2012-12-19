@@ -1,9 +1,10 @@
-var Tile = function () {};
-Tile.WHITE = 1;
-Tile.RED = 2;
-Tile.GREEN = 3;
-Tile.BLUE = 4;
-Tile.EMPTY = 0;
+var Tile = {
+  WHITE: 1,
+  RED: 2,
+  GREEN: 3,
+  BLUE: 4,
+  EMPTY: 0
+};
 
 var Board = function (puzzle) {
   this.puzzle = puzzle;
