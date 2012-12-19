@@ -39,6 +39,10 @@ Board.prototype.setTile = function (position, tile) {
   this.state[row][column] = tile;
 };
 
+Board.prototype.isSolved = function () {
+  return JSON.stringify(this.state) == JSON.stringify(this.puzzle);
+};
+
 var TilePicker = function () {
   this.current = Tile.RED;
 };
@@ -90,6 +94,10 @@ function handleInteraction(e) {
 
     board.setTile(position, tilePicker.current)
     view.update();
+
+    if (board.isSolved()) {
+      alert('Win!');
+    }
   }
 }
 
