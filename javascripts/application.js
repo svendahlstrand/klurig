@@ -36,9 +36,9 @@ Board.prototype.setTile = function (position, tile) {
   this.state[row][column] = tile;
 };
 
-var View = function (canvas, board) {
+var View = function (board) {
   this.board = board;
-  this.canvas = canvas;
+  this.canvas = document.getElementsByTagName("body")[0];
 };
 
 View.prototype.initialize = function () {
@@ -90,7 +90,7 @@ var puzzle = [
 ];
 
 var board = new Board(puzzle);
-var view = new View(document.getElementsByTagName("body")[0], board);
+var view = new View(board);
 
 view.initialize();
 
