@@ -37,9 +37,7 @@ Board.prototype.setTile = function (position, tile) {
 var View = function (board) {
   this.board = board;
   this.canvas = document.getElementsByTagName("body")[0];
-};
 
-View.prototype.initialize = function () {
   var html = '';
   for (var row = 0; row < this.board.state.length; row++) {
     for (var column = 0; column < this.board.state[row].length; column++) {
@@ -58,7 +56,7 @@ View.prototype.initialize = function () {
   html = '<div id="board">' + html + '</div>';
 
   this.canvas.innerHTML = html;
-}
+};
 
 View.prototype.update = function () {
   var tiles = this.canvas.getElementsByTagName('div');
@@ -89,8 +87,6 @@ var puzzle = [
 
 var board = new Board(puzzle);
 var view = new View(board);
-
-view.initialize();
 
 function handleInteraction(e) {
   var element = e.toElement || e.target;
