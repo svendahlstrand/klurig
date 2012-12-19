@@ -60,7 +60,7 @@ var View = function (board) {
 };
 
 View.prototype.update = function () {
-  var tiles = this.canvas.getElementsByTagName('div');
+  var tiles = this.element.getElementsByTagName('div');
   for (var i = 0; i < tiles.length; i++) {
     var tile = tiles[i];
 
