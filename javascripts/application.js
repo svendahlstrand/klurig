@@ -34,6 +34,10 @@ Board.prototype.setTile = function (position, tile) {
   this.state[row][column] = tile;
 };
 
+var TilePicker = function () {
+  this.current = Tile.RED;
+};
+
 var View = function (board) {
   this.board = board;
   this.canvas = document.getElementsByTagName("body")[0];
@@ -79,7 +83,7 @@ function handleInteraction(e) {
   if (element.classList.contains('tile')) {
     var position = element.attributes['data-position'].value;
 
-    board.setTile(position, Tile.RED)
+    board.setTile(position, tilePicker.current)
     view.update();
   }
 }
@@ -98,6 +102,9 @@ var puzzle = [
 
 var board = new Board(puzzle);
 var view = new View(board);
+var tilePicker = new TilePicker();
+
+tilePicker.current = Tile.GREEN;
 
 view.element.addEventListener('click', handleInteraction);
 view.element.addEventListener('touchstart', handleInteraction);
