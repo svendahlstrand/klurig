@@ -7,7 +7,7 @@ body {
   width: 280px;
 }
 
-.slot {
+.slot, .tile {
   height: 64px;
   width: 64px;
   float: left;
@@ -15,20 +15,15 @@ body {
 }
 
 .tile {
-  border: solid 1px #dbdbdb;
   background: #fff;
-
-  height: 64px;
-  width: 64px;
-  float: left;
+  border: solid 1px #dbdbdb;
   border-radius: 2px;
   box-shadow: 0px 1px 1px #ccc;
   margin: 2px;
 
-
+  -moz-transition: background .25s ease-in-out;
+  -webkit-transition: background .25s ease-in-out;
   transition: background .25s ease-in-out;
-   -moz-transition: background .25s ease-in-out;
-   -webkit-transition: background .25s ease-in-out;
 }
 
 .color-1 {
