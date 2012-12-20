@@ -61,7 +61,7 @@ var TilePicker = function () {
 
 var View = function (board) {
   this.board = board;
-  this.canvas = document.getElementsByTagName("body")[0];
+  this.canvas = document.getElementById('board');
 
   var html = '';
   for (var row = 0; row < this.board.state.length; row++) {
@@ -78,14 +78,11 @@ var View = function (board) {
     }
   }
 
-  html = '<div id="board">' + html + '</div>';
-
   this.canvas.innerHTML = html;
-  this.element = document.getElementById('board');
 };
 
 View.prototype.update = function () {
-  var tiles = this.element.getElementsByTagName('div');
+  var tiles = this.canvas.getElementsByTagName('div');
   for (var i = 0; i < tiles.length; i++) {
     var tile = tiles[i];
 
@@ -132,5 +129,5 @@ var tilePicker = new TilePicker();
 
 tilePicker.current = Tile.RED;
 
-view.element.addEventListener('click', handleInteraction);
-view.element.addEventListener('touchstart', handleInteraction);
+view.canvas.addEventListener('click', handleInteraction);
+view.canvas.addEventListener('touchstart', handleInteraction);
