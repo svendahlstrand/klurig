@@ -96,7 +96,7 @@ View.prototype.update = function () {
 /* Main */
 
 function handleInteraction(e) {
-  var element = e.toElement || e.target;
+  var element = e.target;
 
   if (element.classList.contains('tile')) {
     var position = element.attributes['data-position'].value;
@@ -111,7 +111,7 @@ function handleInteraction(e) {
 }
 
 function changeTilePicker(e) {
-  tilePicker.current = Tile[e.toElement.attributes['data-value'].value];
+  tilePicker.current = Tile[e.target.attributes['data-value'].value];
 
   e.preventDefault();
 }
