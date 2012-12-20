@@ -84,7 +84,7 @@ var BoardView = function (board) {
   this.canvas.addEventListener('touchstart', handleInteraction);
 };
 
-BoardView.prototype.update = function () {
+BoardView.prototype.render = function () {
   var tiles = this.canvas.getElementsByTagName('div');
   for (var i = 0; i < tiles.length; i++) {
     var tile = tiles[i];
@@ -105,7 +105,7 @@ function handleInteraction(e) {
     var position = element.attributes['data-position'].value;
 
     board.setTile(position, tilePicker.current)
-    boardView.update();
+    boardView.render();
 
     if (board.isSolved()) {
       alert('Win!');
