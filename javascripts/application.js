@@ -59,7 +59,7 @@ var TilePicker = function () {
   this.current = Tile.RED;
 };
 
-var View = function (board) {
+var BoardView = function (board) {
   this.board = board;
   this.canvas = document.getElementById('board');
 
@@ -81,7 +81,7 @@ var View = function (board) {
   this.canvas.innerHTML = html;
 };
 
-View.prototype.update = function () {
+BoardView.prototype.update = function () {
   var tiles = this.canvas.getElementsByTagName('div');
   for (var i = 0; i < tiles.length; i++) {
     var tile = tiles[i];
@@ -102,7 +102,7 @@ function handleInteraction(e) {
     var position = element.attributes['data-position'].value;
 
     board.setTile(position, tilePicker.current)
-    view.update();
+    boardView.update();
 
     if (board.isSolved()) {
       alert('Win!');
@@ -130,9 +130,9 @@ var puzzle = [
 ];
 
 var board = new Board(puzzle);
-var view = new View(board);
+var boardView = new BoardView(board);
 var tilePicker = new TilePicker();
 
-view.canvas.addEventListener('click', handleInteraction);
-view.canvas.addEventListener('touchstart', handleInteraction);
+boardView.canvas.addEventListener('click', handleInteraction);
+boardView.canvas.addEventListener('touchstart', handleInteraction);
 document.getElementById('tile-picker').addEventListener('click', changeTilePicker);
