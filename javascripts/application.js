@@ -112,8 +112,8 @@ function handleInteraction(e) {
 
 /*
  0: no tile (slot)
- 1: empty tile
 >1: colored tile
+ 9: empty tile
 */
 var puzzle = [
   [1, 1, 1, 0],
