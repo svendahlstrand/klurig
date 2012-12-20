@@ -79,6 +79,9 @@ var BoardView = function (board) {
   }
 
   this.canvas.innerHTML = html;
+
+  this.canvas.addEventListener('click', handleInteraction);
+  this.canvas.addEventListener('touchstart', handleInteraction);
 };
 
 BoardView.prototype.update = function () {
@@ -133,6 +136,4 @@ var board = new Board(puzzle);
 var boardView = new BoardView(board);
 var tilePicker = new TilePicker();
 
-boardView.canvas.addEventListener('click', handleInteraction);
-boardView.canvas.addEventListener('touchstart', handleInteraction);
 document.getElementById('tile-picker').addEventListener('click', changeTilePicker);
