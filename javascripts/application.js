@@ -1,8 +1,8 @@
 var Tile = {
-  WHITE: 1,
-  RED: 2,
-  GREEN: 3,
-  BLUE: 4,
+  RED: 1,
+  GREEN: 2,
+  BLUE: 3,
+  WHITE: 9,
   EMPTY: 0
 };
 
@@ -121,11 +121,11 @@ function handleInteraction(e) {
 >1: colored tile
 */
 var puzzle = [
-  [2, 2, 2, 0],
-  [2, 0, 2, 0],
-  [3, 3, 4, 4],
-  [3, 0, 0, 4],
-  [3, 3, 4, 4]
+  [1, 1, 1, 0],
+  [1, 0, 1, 0],
+  [2, 2, 3, 3],
+  [2, 0, 0, 3],
+  [2, 2, 3, 3]
 ];
 
 var board = new Board(puzzle);
