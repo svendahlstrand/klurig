@@ -110,6 +110,12 @@ function handleInteraction(e) {
   }
 }
 
+function changeTilePicker(e) {
+  tilePicker.current = Tile[e.toElement.attributes['data-value'].value];
+
+  e.preventDefault();
+}
+
 /*
  0: no tile (slot)
 >1: colored tile
@@ -127,7 +133,6 @@ var board = new Board(puzzle);
 var view = new View(board);
 var tilePicker = new TilePicker();
 
-tilePicker.current = Tile.RED;
-
 view.canvas.addEventListener('click', handleInteraction);
 view.canvas.addEventListener('touchstart', handleInteraction);
+document.getElementById('tile-picker').addEventListener('click', changeTilePicker);
