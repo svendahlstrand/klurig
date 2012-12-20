@@ -48,9 +48,7 @@ Board.prototype.isSolved = function () {
 
   for (var row = 0; row < normalizedState.length; row++) {
     for (var column = 0; column < normalizedState[row].length; column++) {
-      if (normalizedState[row][column] > Tile.EMPTY) {
-        normalizedState[row][column] = connections[normalizedState[row][column]];
-      }
+      normalizedState[row][column] = connections[normalizedState[row][column]];
     }
   }
 
