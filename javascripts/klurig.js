@@ -133,7 +133,10 @@ var TilePickerView = function (controller) {
   this.canvas = document.getElementById('tile-picker');
 
   this.canvas.addEventListener('click', function (event) {
-    controller.changeTilePicker(event.target.attributes['data-value'].value);
+    if (event.target.hasAttribute('data-value')) {
+      controller.changeTilePicker(event.target.attributes['data-value'].value);
+    }
+
     event.preventDefault();
   });
 };
