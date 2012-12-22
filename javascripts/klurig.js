@@ -90,7 +90,7 @@ var BoardView = function (board, controller) {
 
   var self = this;
   var handleInteraction = function (event) {
-    controller.handleInteraction(event.target);
+    controller.handleInteraction(event.target.attributes['data-position'].value);
     self.render();
   };
 
@@ -118,7 +118,7 @@ var TilePickerView = function (controller) {
   this.canvas = document.getElementById('tile-picker');
 
   this.canvas.addEventListener('click', function (event) {
-    controller.changeTilePicker(event.target);
+    controller.changeTilePicker(event.target.attributes['data-value'].value);
     event.preventDefault();
   });
 };
@@ -131,16 +131,12 @@ var GameController = function (board, tilePicker) {
   this.tilePicker = tilePicker;
 };
 
-GameController.prototype.handleInteraction = function (element) {
-  if (element.classList.contains('tile')) {
-    var position = element.attributes['data-position'].value;
-
-    this.board.setTile(position, this.tilePicker.current);
-  }
+GameController.prototype.handleInteraction = function (position) {
+  this.board.setTile(position, this.tilePicker.current);
 };
 
-GameController.prototype.changeTilePicker = function (element) {
-  this.tilePicker.current = Tile[element.attributes['data-value'].value];
+GameController.prototype.changeTilePicker = function (color) {
+  this.tilePicker.current = Tile[color];
 };
 
 // Application
