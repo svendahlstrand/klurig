@@ -21,12 +21,12 @@ Board.prototype.getTile = function (position) {
   return this.state[row][column];
 };
 
-Board.prototype.setTile = function (position, tile) {
+Board.prototype.setTile = function (position) {
   var row = position.charCodeAt(0) - 65;
   var column = position[1] - 1;
 
   if (this.state[row][column] != Tile.EMPTY) {
-    this.state[row][column] = tile;
+    this.state[row][column] = this.currentTileColor;
     this.notifyObservers();
   }
 };
@@ -34,6 +34,7 @@ Board.prototype.setTile = function (position, tile) {
 Board.prototype.prepare = function (puzzle) {
   this.puzzle = puzzle;
   this.state = JSON.parse(JSON.stringify(puzzle)); // deep copy
+  this.currentTileColor = Tile.RED;
 
   var colors = {};
 
@@ -81,10 +82,6 @@ Board.prototype.notifyObservers = function () {
     var observer = this.observers[i];
     observer.block.apply(observer.context, arguments);
   }
-};
-
-var TilePicker = function () {
-  this.current = Tile.RED;
 };
 
 // Views
@@ -149,15 +146,15 @@ BoardView.prototype.render = function () {
   }
 };
 
-var TilePickerView = function (board, controller) {
+var TileColorsView = function (board, controller) {
   this.board = board;
-  this.canvas = document.getElementById('tile-picker');
+  this.canvas = document.getElementById('tile-colors');
 
   this.render();
 
   this.canvas.addEventListener('click', function (event) {
     if (event.target.hasAttribute('data-value')) {
-      controller.changeTilePicker(event.target.attributes['data-value'].value);
+      controller.changeTileColor(event.target.attributes['data-value'].value);
     }
 
     event.preventDefault();
@@ -170,7 +167,7 @@ var TilePickerView = function (board, controller) {
   }, this);
 };
 
-TilePickerView.prototype.render = function () {
+TileColorsView.prototype.render = function () {
   var html = '';
   this.board.colors.forEach(function (color) {
     html += '<li><a href="#" data-value="' + color + '">' + color + '</a></li>';
@@ -195,18 +192,17 @@ var PuzzlesView = function (puzzles, controller) {
 // Controller
 // ----------
 
-var GameController = function (puzzles, board, tilePicker) {
+var GameController = function (puzzles, board) {
   this.puzzles = puzzles;
   this.board = board;
-  this.tilePicker = tilePicker;
 };
 
 GameController.prototype.handleInteraction = function (position) {
-  this.board.setTile(position, this.tilePicker.current);
+  this.board.setTile(position);
 };
 
-GameController.prototype.changeTilePicker = function (color) {
-  this.tilePicker.current = Tile[color];
+GameController.prototype.changeTileColor = function (color) {
+  this.board.currentTileColor = Tile[color];
 };
 
 GameController.prototype.prepareBoard = function (number) {
@@ -235,11 +231,10 @@ GameController.prototype.prepareBoard = function (number) {
   // -----------
 
   var board = new Board(PUZZLES[0]);
-  var tilePicker = new TilePicker();
 
-  var gameController = new GameController(PUZZLES, board, tilePicker);
+  var gameController = new GameController(PUZZLES, board);
 
   new BoardView(board, gameController);
-  new TilePickerView(board, gameController);
+  new TileColorsView(board, gameController);
   new PuzzlesView(PUZZLES, gameController);
 })();
