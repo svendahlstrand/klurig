@@ -1,3 +1,6 @@
+// Models
+// ------
+
 var Tile = {
   RED: 1,
   GREEN: 2,
@@ -59,6 +62,9 @@ var TilePicker = function () {
   this.current = Tile.RED;
 };
 
+// Views
+// -----
+
 var BoardView = function (board) {
   this.board = board;
   this.canvas = document.getElementById('board');
@@ -96,7 +102,8 @@ BoardView.prototype.render = function () {
   }
 }
 
-/* Main */
+// Application
+// -----------
 
 function handleInteraction(e) {
   var element = e.target;
