@@ -72,11 +72,10 @@ Board.prototype.addObserver = function (observer, context) {
 };
 
 Board.prototype.notifyObservers = function () {
-  this.observers.forEach(
-    function(observer) {
-      observer.block.call(observer.context, arguments);
-    }
-  );
+  for (var i = 0; i < this.observers.length; i++) {
+    var observer = this.observers[i];
+    observer.block.apply(observer.context, arguments);
+  }
 };
 
 var TilePicker = function () {
