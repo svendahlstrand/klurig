@@ -85,6 +85,7 @@ var BoardView = function (board, controller) {
   this.board = board;
   this.canvas = document.getElementById('board');
 
+  // Render the initial view.
   var html = '';
   for (var row = 0; row < this.board.state.length; row++) {
     for (var column = 0; column < this.board.state[row].length; column++) {
@@ -99,16 +100,16 @@ var BoardView = function (board, controller) {
       }
     }
   }
-
   this.canvas.innerHTML = html;
 
+  // Handle user interaction.
   var handleInteraction = function (event) {
     controller.handleInteraction(event.target.attributes['data-position'].value);
   };
-
   this.canvas.addEventListener('click', handleInteraction);
   this.canvas.addEventListener('touchstart', handleInteraction);
 
+  // Listen for updates on the model.
   var self = this;
   this.board.onUpdate(function () {
     self.render();
