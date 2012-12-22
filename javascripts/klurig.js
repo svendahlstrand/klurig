@@ -12,7 +12,7 @@ var Tile = {
 var Board = function (puzzle) {
   this.puzzle = puzzle;
   this.state = JSON.parse(JSON.stringify(puzzle)); // deep copy
-  this.observerFunctions = [];
+  this.observers = [];
 
   // Reset board state to show blank tiles
   for (var row = 0; row < this.state.length; row++) {
@@ -37,7 +37,7 @@ Board.prototype.setTile = function (position, tile) {
 
   if (this.state[row][column] != Tile.EMPTY) {
     this.state[row][column] = tile;
-    this.triggerUpdate();
+    this.notifyObservers();
   }
 };
 
@@ -62,14 +62,14 @@ Board.prototype.isSolved = function () {
   return JSON.stringify(normalizedState) == JSON.stringify(this.puzzle);
 };
 
-Board.prototype.onUpdate = function (fn) {
-  this.observerFunctions.push(fn);
+Board.prototype.addObserver = function (observer, context) {
+  this.observers.push({block: observer, context: context || null});
 };
 
-Board.prototype.triggerUpdate = function () {
-  this.observerFunctions.forEach(
-    function(fn) {
-      fn.call();
+Board.prototype.notifyObservers = function () {
+  this.observers.forEach(
+    function(observer) {
+      observer.block.call(observer.context, arguments);
     }
   );
 };
@@ -110,10 +110,7 @@ var BoardView = function (board, controller) {
   this.canvas.addEventListener('touchstart', handleInteraction);
 
   // Listen for updates on the model.
-  var self = this;
-  this.board.onUpdate(function () {
-    self.render();
-  });
+  this.board.addObserver(this.render, this);
 };
 
 BoardView.prototype.render = function () {
