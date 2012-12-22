@@ -65,7 +65,7 @@ var TilePicker = function () {
 // Views
 // -----
 
-var BoardView = function (board) {
+var BoardView = function (board, controller) {
   this.board = board;
   this.canvas = document.getElementById('board');
 
@@ -86,8 +86,8 @@ var BoardView = function (board) {
 
   this.canvas.innerHTML = html;
 
-  this.canvas.addEventListener('click', handleInteraction);
-  this.canvas.addEventListener('touchstart', handleInteraction);
+  this.canvas.addEventListener('click', controller.handleInteraction);
+  this.canvas.addEventListener('touchstart', controller.handleInteraction);
 };
 
 BoardView.prototype.render = function () {
@@ -98,39 +98,42 @@ BoardView.prototype.render = function () {
     if (!tile.classList.contains('tile')) { continue; }
 
     var position = tile.attributes['data-position'].value;
-    tile.setAttribute('class', 'tile color-' + this.board.getTile(position))
+    tile.setAttribute('class', 'tile color-' + this.board.getTile(position));
   }
-}
+};
 
-// Application
-// -----------
+// Controller
+// ----------
 
-function handleInteraction(e) {
+var GameController = function () {};
+
+GameController.prototype.handleInteraction = function (e) {
   var element = e.target;
 
   if (element.classList.contains('tile')) {
     var position = element.attributes['data-position'].value;
 
-    board.setTile(position, tilePicker.current)
+    board.setTile(position, tilePicker.current);
     boardView.render();
 
     if (board.isSolved()) {
       alert('Win!');
     }
   }
-}
+};
 
-function changeTilePicker(e) {
+GameController.prototype.changeTilePicker = function (e) {
   tilePicker.current = Tile[e.target.attributes['data-value'].value];
 
   e.preventDefault();
-}
+};
 
-/*
- 0: no tile (slot)
->1: colored tile
- 9: empty tile
-*/
+// Puzzle
+// ------
+// * 0: no tile (slot)
+// * >1: colored tile
+// * 9: empty tile
+
 var puzzle = [
   [1, 1, 1, 0],
   [1, 0, 1, 0],
@@ -139,8 +142,13 @@ var puzzle = [
   [2, 2, 3, 3]
 ];
 
-var board = new Board(puzzle);
-var boardView = new BoardView(board);
-var tilePicker = new TilePicker();
+// Application
+// -----------
 
-document.getElementById('tile-picker').addEventListener('click', changeTilePicker);
+var board = new Board(puzzle);
+var tilePicker = new TilePicker();
+var gameController = new GameController();
+var boardView = new BoardView(board, gameController);
+
+// This should be handled in a tile picker view.
+document.getElementById('tile-picker').addEventListener('click', gameController.changeTilePicker);
