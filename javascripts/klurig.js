@@ -178,10 +178,25 @@ TilePickerView.prototype.render = function () {
   this.canvas.innerHTML = html;
 };
 
+var PuzzlesView = function (puzzles, controller) {
+  this.canvas = document.getElementById('puzzles');
+
+  var html = '';
+  for (var i = 0; i < puzzles.length; i++) {
+    html += '<li><a href="#' + (i + 1) + '">Puzzle #' + (i + 1) + '</a></li>';
+  }
+  this.canvas.innerHTML = html;
+
+  window.addEventListener('hashchange', function () {
+    controller.prepareBoard(window.location.hash.match(/\d/g)[0] - 1);
+  });
+};
+
 // Controller
 // ----------
 
-var GameController = function (board, tilePicker) {
+var GameController = function (puzzles, board, tilePicker) {
+  this.puzzles = puzzles;
   this.board = board;
   this.tilePicker = tilePicker;
 };
@@ -194,28 +209,37 @@ GameController.prototype.changeTilePicker = function (color) {
   this.tilePicker.current = Tile[color];
 };
 
-// Puzzles
-// -------
-
-var PUZZLES = [
-  [
-    [1, 1, 1, 0],
-    [1, 0, 1, 0],
-    [2, 2, 3, 3],
-    [2, 0, 0, 3],
-    [2, 2, 3, 3]
-  ]
-];
-
-// Application
-// -----------
+GameController.prototype.prepareBoard = function (number) {
+  this.board.prepare(this.puzzles[number]);
+};
 
 (function () {
+  // Puzzles
+  // -------
+
+  var PUZZLES = [
+    [
+      [1, 1, 1, 0],
+      [1, 0, 1, 0],
+      [2, 2, 3, 3],
+      [2, 0, 0, 3],
+      [2, 2, 3, 3]
+    ],
+    [
+      [1, 1, 1, 1],
+      [2, 2, 2, 2]
+    ]
+  ];
+
+  // Application
+  // -----------
+
   var board = new Board(PUZZLES[0]);
   var tilePicker = new TilePicker();
 
-  var gameController = new GameController(board, tilePicker);
+  var gameController = new GameController(PUZZLES, board, tilePicker);
 
   new BoardView(board, gameController);
   new TilePickerView(board, gameController);
+  new PuzzlesView(PUZZLES, gameController);
 })();
