@@ -102,15 +102,18 @@ BoardView.prototype.render = function () {
   }
 };
 
+var TilePickerView = function (controller) {
+  this.canvas = document.getElementById('tile-picker');
+
+  this.canvas.addEventListener('click', controller.changeTilePicker);
+};
+
 // Controller
 // ----------
 
 var GameController = function (board, tilePicker) {
   this.board = board;
   this.tilePicker = tilePicker;
-
-  // This should be handled in a tile picker view.
-  document.getElementById('tile-picker').addEventListener('click', this.changeTilePicker);
 };
 
 GameController.prototype.handleInteraction = function (e) {
@@ -153,5 +156,8 @@ var puzzle = [
 
 var board = new Board(puzzle);
 var tilePicker = new TilePicker();
+
 var gameController = new GameController(board, tilePicker);
+
 var boardView = new BoardView(board, gameController);
+var tilePickerView = new TilePickerView(gameController);
