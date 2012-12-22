@@ -10,23 +10,8 @@ var Tile = {
 };
 
 var Board = function (puzzle) {
-  this.puzzle = puzzle;
-  this.state = JSON.parse(JSON.stringify(puzzle)); // deep copy
   this.observers = [];
-
-  var colors = {};
-
-  // Reset board state to show blank tiles
-  for (var row = 0; row < this.state.length; row++) {
-    for (var column = 0; column < this.state[row].length; column++) {
-      if (this.state[row][column] > Tile.EMPTY) {
-        colors[this.state[row][column]] = true;
-        this.state[row][column] = Tile.WHITE;
-      }
-    }
-  }
-
-  this.colors = Object.keys(Tile).slice(0, Object.keys(colors).length);
+  this.prepare(puzzle);
 };
 
 Board.prototype.getTile = function (position) {
@@ -44,6 +29,26 @@ Board.prototype.setTile = function (position, tile) {
     this.state[row][column] = tile;
     this.notifyObservers();
   }
+};
+
+Board.prototype.prepare = function (puzzle) {
+  this.puzzle = puzzle;
+  this.state = JSON.parse(JSON.stringify(puzzle)); // deep copy
+
+  var colors = {};
+
+  // Reset board state to show blank tiles
+  for (var row = 0; row < this.state.length; row++) {
+    for (var column = 0; column < this.state[row].length; column++) {
+      if (this.state[row][column] > Tile.EMPTY) {
+        colors[this.state[row][column]] = true;
+        this.state[row][column] = Tile.WHITE;
+      }
+    }
+  }
+
+  this.colors = Object.keys(Tile).slice(0, Object.keys(colors).length);
+  this.notifyObservers('preparedPuzzle');
 };
 
 Board.prototype.isSolved = function () {
@@ -89,6 +94,27 @@ var BoardView = function (board, controller) {
   this.board = board;
   this.canvas = document.getElementById('board');
 
+  this.renderInitial();
+
+  // Handle user interaction.
+  var handleInteraction = function (event) {
+    controller.handleInteraction(event.target.attributes['data-position'].value);
+  };
+  this.canvas.addEventListener('click', handleInteraction);
+  this.canvas.addEventListener('touchstart', handleInteraction);
+
+  // Listen for updates on the model.
+  this.board.addObserver(function (event) {
+    if (event == 'preparedPuzzle') {
+      this.renderInitial();
+    }
+    else {
+      this.render();
+    }
+  }, this);
+};
+
+BoardView.prototype.renderInitial = function () {
   // Render the initial view.
   var html = '';
   for (var row = 0; row < this.board.state.length; row++) {
@@ -105,16 +131,6 @@ var BoardView = function (board, controller) {
     }
   }
   this.canvas.innerHTML = html;
-
-  // Handle user interaction.
-  var handleInteraction = function (event) {
-    controller.handleInteraction(event.target.attributes['data-position'].value);
-  };
-  this.canvas.addEventListener('click', handleInteraction);
-  this.canvas.addEventListener('touchstart', handleInteraction);
-
-  // Listen for updates on the model.
-  this.board.addObserver(this.render, this);
 };
 
 BoardView.prototype.render = function () {
@@ -137,12 +153,7 @@ var TilePickerView = function (board, controller) {
   this.board = board;
   this.canvas = document.getElementById('tile-picker');
 
-  // Render the initial view.
-  var html = '';
-  this.board.colors.forEach(function (color) {
-    html += '<li><a href="#" data-value="' + color + '">' + color + '</a></li>';
-  });
-  this.canvas.innerHTML = html;
+  this.render();
 
   this.canvas.addEventListener('click', function (event) {
     if (event.target.hasAttribute('data-value')) {
@@ -151,6 +162,20 @@ var TilePickerView = function (board, controller) {
 
     event.preventDefault();
   });
+
+  this.board.addObserver(function (event) {
+    if (event == 'preparedPuzzle') {
+      this.render();
+    }
+  }, this);
+};
+
+TilePickerView.prototype.render = function () {
+  var html = '';
+  this.board.colors.forEach(function (color) {
+    html += '<li><a href="#" data-value="' + color + '">' + color + '</a></li>';
+  });
+  this.canvas.innerHTML = html;
 };
 
 // Controller
