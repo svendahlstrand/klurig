@@ -134,8 +134,16 @@ BoardView.prototype.render = function () {
   }
 };
 
-var TilePickerView = function (controller) {
+var TilePickerView = function (board, controller) {
+  this.board = board;
   this.canvas = document.getElementById('tile-picker');
+
+  // Render the initial view.
+  var html = '';
+  this.board.colors.forEach(function (color) {
+    html += '<li><a href="#" data-value="' + color + '">' + color + '</a></li>';
+  });
+  this.canvas.innerHTML = html;
 
   this.canvas.addEventListener('click', function (event) {
     if (event.target.hasAttribute('data-value')) {
@@ -180,5 +188,5 @@ GameController.prototype.changeTilePicker = function (color) {
   var gameController = new GameController(board, tilePicker);
 
   new BoardView(board, gameController);
-  new TilePickerView(gameController);
+  new TilePickerView(board, gameController);
 })();
