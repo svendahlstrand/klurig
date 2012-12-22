@@ -34,7 +34,9 @@ Board.prototype.setTile = function (position, tile) {
   var row = position.charCodeAt(0) - 65;
   var column = position[1] - 1;
 
-  this.state[row][column] = tile;
+  if (this.state[row][column] != Tile.EMPTY) {
+    this.state[row][column] = tile;
+  }
 };
 
 Board.prototype.isSolved = function () {
