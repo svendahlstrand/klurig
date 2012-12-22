@@ -12,6 +12,7 @@ var Tile = {
 var Board = function (puzzle) {
   this.puzzle = puzzle;
   this.state = JSON.parse(JSON.stringify(puzzle)); // deep copy
+  this.observerFunctions = [];
 
   // Reset board state to show blank tiles
   for (var row = 0; row < this.state.length; row++) {
@@ -36,6 +37,7 @@ Board.prototype.setTile = function (position, tile) {
 
   if (this.state[row][column] != Tile.EMPTY) {
     this.state[row][column] = tile;
+    this.triggerUpdate();
   }
 };
 
@@ -58,6 +60,18 @@ Board.prototype.isSolved = function () {
   }
 
   return JSON.stringify(normalizedState) == JSON.stringify(this.puzzle);
+};
+
+Board.prototype.onUpdate = function (fn) {
+  this.observerFunctions.push(fn);
+};
+
+Board.prototype.triggerUpdate = function () {
+  this.observerFunctions.forEach(
+    function(fn) {
+      fn.call();
+    }
+  );
 };
 
 var TilePicker = function () {
@@ -88,14 +102,17 @@ var BoardView = function (board, controller) {
 
   this.canvas.innerHTML = html;
 
-  var self = this;
   var handleInteraction = function (event) {
     controller.handleInteraction(event.target.attributes['data-position'].value);
-    self.render();
   };
 
   this.canvas.addEventListener('click', handleInteraction);
   this.canvas.addEventListener('touchstart', handleInteraction);
+
+  var self = this;
+  this.board.onUpdate(function () {
+    self.render();
+  });
 };
 
 BoardView.prototype.render = function () {
