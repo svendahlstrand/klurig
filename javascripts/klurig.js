@@ -169,19 +169,24 @@ GameController.prototype.changeTilePicker = function (color) {
   this.tilePicker.current = Tile[color];
 };
 
-// Application
-// -----------
+// Puzzles
+// -------
 
-(function () {
-  var puzzle = [
+var PUZZLES = [
+  [
     [1, 1, 1, 0],
     [1, 0, 1, 0],
     [2, 2, 3, 3],
     [2, 0, 0, 3],
     [2, 2, 3, 3]
-  ];
+  ]
+];
 
-  var board = new Board(puzzle);
+// Application
+// -----------
+
+(function () {
+  var board = new Board(PUZZLES[0]);
   var tilePicker = new TilePicker();
 
   var gameController = new GameController(board, tilePicker);
