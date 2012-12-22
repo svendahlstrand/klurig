@@ -86,8 +86,14 @@ var BoardView = function (board, controller) {
 
   this.canvas.innerHTML = html;
 
-  this.canvas.addEventListener('click', controller.handleInteraction);
-  this.canvas.addEventListener('touchstart', controller.handleInteraction);
+  var self = this;
+  var handleInteraction = function (event) {
+    controller.handleInteraction(event.target);
+    self.render();
+  };
+
+  this.canvas.addEventListener('click', handleInteraction);
+  this.canvas.addEventListener('touchstart', handleInteraction);
 };
 
 BoardView.prototype.render = function () {
@@ -100,12 +106,19 @@ BoardView.prototype.render = function () {
     var position = tile.attributes['data-position'].value;
     tile.setAttribute('class', 'tile color-' + this.board.getTile(position));
   }
+
+  if (this.board.isSolved()) {
+    alert('Win!');
+  }
 };
 
 var TilePickerView = function (controller) {
   this.canvas = document.getElementById('tile-picker');
 
-  this.canvas.addEventListener('click', controller.changeTilePicker);
+  this.canvas.addEventListener('click', function (event) {
+    controller.changeTilePicker(event.target);
+    event.preventDefault();
+  });
 };
 
 // Controller
@@ -116,48 +129,35 @@ var GameController = function (board, tilePicker) {
   this.tilePicker = tilePicker;
 };
 
-GameController.prototype.handleInteraction = function (e) {
-  var element = e.target;
-
+GameController.prototype.handleInteraction = function (element) {
   if (element.classList.contains('tile')) {
     var position = element.attributes['data-position'].value;
 
-    board.setTile(position, tilePicker.current);
-    boardView.render();
-
-    if (board.isSolved()) {
-      alert('Win!');
-    }
+    this.board.setTile(position, this.tilePicker.current);
   }
 };
 
-GameController.prototype.changeTilePicker = function (e) {
-  tilePicker.current = Tile[e.target.attributes['data-value'].value];
-
-  e.preventDefault();
+GameController.prototype.changeTilePicker = function (element) {
+  this.tilePicker.current = Tile[element.attributes['data-value'].value];
 };
-
-// Puzzle
-// ------
-// * 0: no tile (slot)
-// * >1: colored tile
-// * 9: empty tile
-
-var puzzle = [
-  [1, 1, 1, 0],
-  [1, 0, 1, 0],
-  [2, 2, 3, 3],
-  [2, 0, 0, 3],
-  [2, 2, 3, 3]
-];
 
 // Application
 // -----------
 
-var board = new Board(puzzle);
-var tilePicker = new TilePicker();
+(function () {
+  var puzzle = [
+    [1, 1, 1, 0],
+    [1, 0, 1, 0],
+    [2, 2, 3, 3],
+    [2, 0, 0, 3],
+    [2, 2, 3, 3]
+  ];
 
-var gameController = new GameController(board, tilePicker);
+  var board = new Board(puzzle);
+  var tilePicker = new TilePicker();
 
-var boardView = new BoardView(board, gameController);
-var tilePickerView = new TilePickerView(gameController);
+  var gameController = new GameController(board, tilePicker);
+
+  new BoardView(board, gameController);
+  new TilePickerView(gameController);
+})();
