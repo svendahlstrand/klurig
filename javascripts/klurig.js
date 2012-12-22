@@ -105,7 +105,13 @@ BoardView.prototype.render = function () {
 // Controller
 // ----------
 
-var GameController = function () {};
+var GameController = function (board, tilePicker) {
+  this.board = board;
+  this.tilePicker = tilePicker;
+
+  // This should be handled in a tile picker view.
+  document.getElementById('tile-picker').addEventListener('click', this.changeTilePicker);
+};
 
 GameController.prototype.handleInteraction = function (e) {
   var element = e.target;
@@ -147,8 +153,5 @@ var puzzle = [
 
 var board = new Board(puzzle);
 var tilePicker = new TilePicker();
-var gameController = new GameController();
+var gameController = new GameController(board, tilePicker);
 var boardView = new BoardView(board, gameController);
-
-// This should be handled in a tile picker view.
-document.getElementById('tile-picker').addEventListener('click', gameController.changeTilePicker);
