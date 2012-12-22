@@ -14,14 +14,19 @@ var Board = function (puzzle) {
   this.state = JSON.parse(JSON.stringify(puzzle)); // deep copy
   this.observers = [];
 
+  var colors = {};
+
   // Reset board state to show blank tiles
   for (var row = 0; row < this.state.length; row++) {
     for (var column = 0; column < this.state[row].length; column++) {
       if (this.state[row][column] > Tile.EMPTY) {
+        colors[this.state[row][column]] = true;
         this.state[row][column] = Tile.WHITE;
       }
     }
   }
+
+  this.colors = Object.keys(Tile).slice(0, Object.keys(colors).length);
 };
 
 Board.prototype.getTile = function (position) {
