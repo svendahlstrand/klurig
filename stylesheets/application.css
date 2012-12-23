@@ -1,15 +1,17 @@
 body {
   background: #ececec;
   color: #3d4044;
+  text-align: center;
 }
 
 #board {
   overflow: hidden;
+  display: inline-block;
 }
 
 .slot, .tile {
-  height: 64px;
-  width: 64px;
+  height: 32px;
+  width: 32px;
   float: left;
   margin: 3px;
 }
@@ -44,4 +46,9 @@ body {
 
 .color-4 {
   background: #FFD442;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
 }
