@@ -14,9 +14,8 @@ var Tile = {
 
 // ### Board
 
-var Board = function (puzzle) {
+var Board = function () {
   this.observers = [];
-  this.prepare(puzzle);
 };
 
 Board.prototype = {
@@ -100,8 +99,6 @@ var BoardView = function (board, controller) {
   this.board = board;
   this.canvas = document.getElementById('board');
 
-  this.renderInitial();
-
   // Handle user interaction.
   var handleInteraction = function (event) {
     var touch = event.touches && event.touches[0];
@@ -177,8 +174,6 @@ var TileColorsView = function (board, controller) {
   this.board = board;
   this.canvas = document.getElementById('tile-colors');
 
-  this.render();
-
   this.canvas.addEventListener('click', function (event) {
     if (event.target.hasAttribute('data-value')) {
       controller.changeTileColor(event.target.attributes['data-value'].value);
@@ -242,16 +237,17 @@ GameController.prototype = {
   }
 };
 
-
 // Application
 // -----------
 
 (function () {
-  var board = new Board(PUZZLES[0]);
+  var board = new Board();
 
   var gameController = new GameController(PUZZLES, board);
 
   new BoardView(board, gameController);
   new TileColorsView(board, gameController);
   new PuzzlesView(PUZZLES, gameController);
+
+  gameController.prepareBoard(0);
 })();
