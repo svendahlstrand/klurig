@@ -96,10 +96,21 @@ var BoardView = function (board, controller) {
 
   // Handle user interaction.
   var handleInteraction = function (event) {
-    controller.handleInteraction(event.target.attributes['data-position'].value);
+    var touch = event.touches && event.touches[0];
+    var target;
+
+    if (touch) {
+      target = document.elementFromPoint(touch.pageX, touch.pageY);
+    }
+    else {
+      target = event.target;
+    }
+
+    controller.handleInteraction(target.attributes['data-position'].value);
   };
   this.canvas.addEventListener('click', handleInteraction);
   this.canvas.addEventListener('touchstart', handleInteraction);
+  this.canvas.addEventListener('touchmove', handleInteraction);
 
   // Listen for updates on the model.
   this.board.addObserver(function (event) {
