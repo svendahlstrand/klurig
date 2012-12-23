@@ -2,11 +2,15 @@ body {
   background: #ececec;
   color: #3d4044;
   text-align: center;
+
+  -webkit-user-select: none;
 }
 
 #board {
   overflow: hidden;
   display: inline-block;
+
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 .slot, .tile {
