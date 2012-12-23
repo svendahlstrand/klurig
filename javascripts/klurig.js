@@ -111,7 +111,9 @@ var BoardView = function (board, controller) {
       target = event.target;
     }
 
-    controller.handleInteraction(target.attributes['data-position'].value);
+    if (target.hasAttribute('data-position')) {
+      controller.handleInteraction(target.attributes['data-position'].value);
+    }
   };
   this.canvas.addEventListener('click', handleInteraction);
   this.canvas.addEventListener('touchstart', handleInteraction);
