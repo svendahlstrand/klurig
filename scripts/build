@@ -6,4 +6,4 @@ cd $DIR/..
 rm -rf public
 mkdir -p public/play/
 cp -R javascripts/ stylesheets/ index.html public/play/
-$DIR/doc
+$DIR/docs
