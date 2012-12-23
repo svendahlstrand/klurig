@@ -12,5 +12,11 @@
     <ul id="tile-colors"></ul>
     <ul id="puzzles"></ul>
   </body>
+  <script>
+    // Disable scroll
+    document.addEventListener('touchmove', function (event){
+      event.preventDefault();
+    });
+  </script>
   <script src="./javascripts/klurig.js"></script>
 </html>
