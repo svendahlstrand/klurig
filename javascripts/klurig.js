@@ -19,73 +19,75 @@ var Board = function (puzzle) {
   this.prepare(puzzle);
 };
 
-Board.prototype.getTile = function (position) {
-  var row = position.charCodeAt(0) - 65;
-  var column = position[1] - 1;
+Board.prototype = {
+  getTile: function (position) {
+    var row = position.charCodeAt(0) - 65;
+    var column = position[1] - 1;
 
-  return this.state[row][column];
-};
+    return this.state[row][column];
+  },
 
-Board.prototype.setTile = function (position) {
-  var row = position.charCodeAt(0) - 65;
-  var column = position[1] - 1;
+  setTile: function (position) {
+    var row = position.charCodeAt(0) - 65;
+    var column = position[1] - 1;
 
-  if (this.state[row][column] != Tile.EMPTY) {
-    this.state[row][column] = this.currentTileColor;
-    this.notifyObservers();
-  }
-};
+    if (this.state[row][column] != Tile.EMPTY) {
+      this.state[row][column] = this.currentTileColor;
+      this.notifyObservers();
+    }
+  },
 
-Board.prototype.prepare = function (puzzle) {
-  this.puzzle = puzzle;
-  this.state = JSON.parse(JSON.stringify(puzzle)); // deep copy
-  this.currentTileColor = Tile.RED;
+  prepare: function (puzzle) {
+    this.puzzle = puzzle;
+    this.state = JSON.parse(JSON.stringify(puzzle)); // deep copy
+    this.currentTileColor = Tile.RED;
 
-  var colors = {};
+    var colors = {};
 
-  // Reset board state to show blank tiles
-  for (var row = 0; row < this.state.length; row++) {
-    for (var column = 0; column < this.state[row].length; column++) {
-      if (this.state[row][column] > Tile.EMPTY) {
-        colors[this.state[row][column]] = true;
-        this.state[row][column] = Tile.WHITE;
+    // Reset board state to show blank tiles
+    for (var row = 0; row < this.state.length; row++) {
+      for (var column = 0; column < this.state[row].length; column++) {
+        if (this.state[row][column] > Tile.EMPTY) {
+          colors[this.state[row][column]] = true;
+          this.state[row][column] = Tile.WHITE;
+        }
       }
     }
-  }
 
-  this.colors = Object.keys(Tile).slice(0, Object.keys(colors).length);
-  this.notifyObservers('preparedPuzzle');
-};
+    this.colors = Object.keys(Tile).slice(0, Object.keys(colors).length);
+    this.notifyObservers('preparedPuzzle');
+  },
 
-Board.prototype.isSolved = function () {
-  var normalizedState = JSON.parse(JSON.stringify(this.state)); // deep copy
+  isSolved: function () {
+    var normalizedState = JSON.parse(JSON.stringify(this.state)); // deep copy
 
-  var connections = [];
+    var connections = [];
 
-  for (var row = 0; row < normalizedState.length; row++) {
-    for (var column = 0; column < normalizedState[row].length; column++) {
-      if (normalizedState[row][column] == Tile.WHITE) { return false; }
-      connections[normalizedState[row][column]] = this.puzzle[row][column];
+    for (var row = 0; row < normalizedState.length; row++) {
+      for (var column = 0; column < normalizedState[row].length; column++) {
+        if (normalizedState[row][column] == Tile.WHITE) { return false; }
+        connections[normalizedState[row][column]] = this.puzzle[row][column];
+      }
     }
-  }
 
-  for (var row = 0; row < normalizedState.length; row++) {
-    for (var column = 0; column < normalizedState[row].length; column++) {
-      normalizedState[row][column] = connections[normalizedState[row][column]];
+    for (var row = 0; row < normalizedState.length; row++) {
+      for (var column = 0; column < normalizedState[row].length; column++) {
+        normalizedState[row][column] = connections[normalizedState[row][column]];
+      }
     }
-  }
 
-  return JSON.stringify(normalizedState) == JSON.stringify(this.puzzle);
-};
+    return JSON.stringify(normalizedState) == JSON.stringify(this.puzzle);
+  },
 
-Board.prototype.addObserver = function (observer, context) {
-  this.observers.push({block: observer, context: context || null});
-};
+  addObserver: function (observer, context) {
+    this.observers.push({block: observer, context: context || null});
+  },
 
-Board.prototype.notifyObservers = function () {
-  for (var i = 0; i < this.observers.length; i++) {
-    var observer = this.observers[i];
-    observer.block.apply(observer.context, arguments);
+  notifyObservers: function () {
+    for (var i = 0; i < this.observers.length; i++) {
+      var observer = this.observers[i];
+      observer.block.apply(observer.context, arguments);
+    }
   }
 };
 
@@ -129,41 +131,43 @@ var BoardView = function (board, controller) {
   }, this);
 };
 
-BoardView.prototype.renderInitial = function () {
-  // Render the initial view.
-  var html = '';
-  for (var row = 0; row < this.board.state.length; row++) {
-    for (var column = 0; column < this.board.state[row].length; column++) {
-      var tile = this.board.state[row][column];
-      var position = String.fromCharCode(row + 65) + (column + 1);
-      var classValue = column === 0 ? 'first ' : '';
+BoardView.prototype = {
+  renderInitial: function () {
+    // Render the initial view.
+    var html = '';
+    for (var row = 0; row < this.board.state.length; row++) {
+      for (var column = 0; column < this.board.state[row].length; column++) {
+        var tile = this.board.state[row][column];
+        var position = String.fromCharCode(row + 65) + (column + 1);
+        var classValue = column === 0 ? 'first ' : '';
 
-      if (tile == Tile.EMPTY) {
-        classValue += 'slot';
-      }
-      else {
-        classValue += 'tile color-' + tile;
-      }
+        if (tile == Tile.EMPTY) {
+          classValue += 'slot';
+        }
+        else {
+          classValue += 'tile color-' + tile;
+        }
 
-      html += '<div class="' + classValue + '" data-position="' + position + '"></div>';
+        html += '<div class="' + classValue + '" data-position="' + position + '"></div>';
+      }
     }
-  }
-  this.canvas.innerHTML = html;
-};
+    this.canvas.innerHTML = html;
+  },
 
-BoardView.prototype.render = function () {
-  var tiles = this.canvas.getElementsByTagName('div');
-  for (var i = 0; i < tiles.length; i++) {
-    var tile = tiles[i];
+  render: function () {
+    var tiles = this.canvas.getElementsByTagName('div');
+    for (var i = 0; i < tiles.length; i++) {
+      var tile = tiles[i];
 
-    if (!tile.classList.contains('tile')) { continue; }
+      if (!tile.classList.contains('tile')) { continue; }
 
-    var position = tile.attributes['data-position'].value;
-    tile.setAttribute('class', tile.getAttribute('class').replace(/color-\d+/, 'color-' + this.board.getTile(position)));
-  }
+      var position = tile.attributes['data-position'].value;
+      tile.setAttribute('class', tile.getAttribute('class').replace(/color-\d+/, 'color-' + this.board.getTile(position)));
+    }
 
-  if (this.board.isSolved()) {
-    alert('Win!');
+    if (this.board.isSolved()) {
+      alert('Win!');
+    }
   }
 };
 
@@ -190,12 +194,14 @@ var TileColorsView = function (board, controller) {
   }, this);
 };
 
-TileColorsView.prototype.render = function () {
-  var html = '';
-  this.board.colors.forEach(function (color) {
-    html += '<li><a href="#" data-value="' + color + '">' + color + '</a></li>';
-  });
-  this.canvas.innerHTML = html;
+TileColorsView.prototype = {
+  render: function () {
+    var html = '';
+    this.board.colors.forEach(function (color) {
+      html += '<li><a href="#" data-value="' + color + '">' + color + '</a></li>';
+    });
+    this.canvas.innerHTML = html;
+  }
 };
 
 // ### Puzzles
@@ -222,17 +228,20 @@ var GameController = function (puzzles, board) {
   this.board = board;
 };
 
-GameController.prototype.handleInteraction = function (position) {
-  this.board.setTile(position);
+GameController.prototype = {
+  handleInteraction: function (position) {
+    this.board.setTile(position);
+  },
+
+  changeTileColor: function (color) {
+    this.board.currentTileColor = Tile[color];
+  },
+
+  prepareBoard:  function (number) {
+    this.board.prepare(this.puzzles[number]);
+  }
 };
 
-GameController.prototype.changeTileColor = function (color) {
-  this.board.currentTileColor = Tile[color];
-};
-
-GameController.prototype.prepareBoard = function (number) {
-  this.board.prepare(this.puzzles[number]);
-};
 
 // Application
 // -----------
