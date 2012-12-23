@@ -130,7 +130,7 @@ BoardView.prototype.renderInitial = function () {
     for (var column = 0; column < this.board.state[row].length; column++) {
       var tile = this.board.state[row][column];
       var position = String.fromCharCode(row + 65) + (column + 1);
-      var classValue = column == 0 ? 'first ' : '';
+      var classValue = column === 0 ? 'first ' : '';
 
       if (tile == Tile.EMPTY) {
         classValue += 'slot';
@@ -252,14 +252,14 @@ GameController.prototype.prepareBoard = function (number) {
       [0, 2, 1, 0, 0],
       [0, 2, 1, 1, 0],
       [2, 2, 3, 3, 3],
-      [0, 0, 3, 0, 0],
+      [0, 0, 3, 0, 0]
     ],
     [
       [1, 1, 2, 2],
       [1, 0, 2, 0],
       [3, 3, 4, 4],
       [3, 0, 4, 0]
-    ],
+    ]
   ];
 
   // Application
