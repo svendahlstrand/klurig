@@ -31,13 +31,17 @@ body {
 }
 
 .color-1 {
-  background: #ec4c29;
+  background: #E35B48;
 }
 
 .color-2 {
-  background: #5da272;
+  background: #9EC500;
 }
 
 .color-3 {
-  background: #646784;
+  background: #2DD3FF;
+}
+
+.color-4 {
+  background: #FFD442;
 }
