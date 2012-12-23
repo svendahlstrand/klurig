@@ -224,47 +224,10 @@ GameController.prototype.prepareBoard = function (number) {
   this.board.prepare(this.puzzles[number]);
 };
 
+// Application
+// -----------
+
 (function () {
-  // Puzzles
-  // -------
-
-  var PUZZLES = [
-    [
-      [1, 0, 0, 2],
-      [1, 1, 2, 2],
-      [0, 1, 2, 0]
-    ],
-    [
-      [0, 1, 1],
-      [0, 1, 1],
-      [2, 2, 1],
-      [2, 2, 2]
-    ],
-    [
-      [1, 1, 1, 0],
-      [1, 0, 1, 0],
-      [2, 2, 3, 3],
-      [2, 0, 0, 3],
-      [2, 2, 3, 3]
-    ],
-    [
-      [0, 0, 1, 0, 0],
-      [0, 2, 1, 0, 0],
-      [0, 2, 1, 1, 0],
-      [2, 2, 3, 3, 3],
-      [0, 0, 3, 0, 0]
-    ],
-    [
-      [1, 1, 2, 2],
-      [1, 0, 2, 0],
-      [3, 3, 4, 4],
-      [3, 0, 4, 0]
-    ]
-  ];
-
-  // Application
-  // -----------
-
   var board = new Board(PUZZLES[0]);
 
   var gameController = new GameController(PUZZLES, board);
