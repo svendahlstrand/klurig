@@ -1,6 +1,8 @@
 // Models
 // ------
 
+// ### Tile
+
 var Tile = {
   RED: 1,
   GREEN: 2,
@@ -9,6 +11,8 @@ var Tile = {
   WHITE: 9,
   EMPTY: 0
 };
+
+// ### Board
 
 var Board = function (puzzle) {
   this.observers = [];
@@ -88,6 +92,8 @@ Board.prototype.notifyObservers = function () {
 // Views
 // -----
 
+// ### Board
+
 var BoardView = function (board, controller) {
   this.board = board;
   this.canvas = document.getElementById('board');
@@ -161,6 +167,8 @@ BoardView.prototype.render = function () {
   }
 };
 
+// ### Tile colors
+
 var TileColorsView = function (board, controller) {
   this.board = board;
   this.canvas = document.getElementById('tile-colors');
@@ -189,6 +197,8 @@ TileColorsView.prototype.render = function () {
   });
   this.canvas.innerHTML = html;
 };
+
+// ### Puzzles
 
 var PuzzlesView = function (puzzles, controller) {
   this.canvas = document.getElementById('puzzles');
