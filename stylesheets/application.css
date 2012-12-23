@@ -4,7 +4,6 @@ body {
 }
 
 #board {
-  width: 280px;
   overflow: hidden;
 }
 
@@ -25,6 +24,10 @@ body {
   -moz-transition: background .25s ease-in-out;
   -webkit-transition: background .25s ease-in-out;
   transition: background .25s ease-in-out;
+}
+
+.first {
+  clear: left;
 }
 
 .color-1 {

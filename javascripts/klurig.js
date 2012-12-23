@@ -118,13 +118,16 @@ BoardView.prototype.renderInitial = function () {
     for (var column = 0; column < this.board.state[row].length; column++) {
       var tile = this.board.state[row][column];
       var position = String.fromCharCode(row + 65) + (column + 1);
+      var classValue = column == 0 ? 'first ' : '';
 
       if (tile == Tile.EMPTY) {
-        html += '<div class="slot" data-position="' + position + '"></div>';
+        classValue += 'slot';
       }
       else {
-        html += '<div class="tile color-' + tile + '" data-position="' + position + '"></div>';
+        classValue += 'tile color-' + tile;
       }
+
+      html += '<div class="' + classValue + '" data-position="' + position + '"></div>';
     }
   }
   this.canvas.innerHTML = html;
@@ -138,7 +141,7 @@ BoardView.prototype.render = function () {
     if (!tile.classList.contains('tile')) { continue; }
 
     var position = tile.attributes['data-position'].value;
-    tile.setAttribute('class', 'tile color-' + this.board.getTile(position));
+    tile.setAttribute('class', tile.getAttribute('class').replace(/color-\d+/, 'color-' + this.board.getTile(position)));
   }
 
   if (this.board.isSolved()) {
