@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+cd $DIR/..
+rm -rf public
+mkdir -p public/play/
+cp -R javascripts/ stylesheets/ index.html public/play/
+$DIR/doc
