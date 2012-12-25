@@ -55,7 +55,7 @@ Board.prototype = {
   // Prepares and loads a puzzle as a two-dimensional array of integers.
   prepare: function (puzzle) {
     this.puzzle = puzzle;
-    this.state = JSON.parse(JSON.stringify(puzzle)); // deep copy
+    this.state = utils.deepCopy(puzzle);
     this.currentTileColor = Tile.RED;
 
     var colors = {};
@@ -78,7 +78,7 @@ Board.prototype = {
 
   // Checks if the puzzle is solved (state equals puzzle).
   isSolved: function () {
-    var normalizedState = JSON.parse(JSON.stringify(this.state)); // deep copy
+    var normalizedState = utils.deepCopy(this.state);
 
     var connections = [];
 
@@ -95,7 +95,7 @@ Board.prototype = {
       }
     }
 
-    return JSON.stringify(normalizedState) == JSON.stringify(this.puzzle);
+    return utils.equals(normalizedState, this.puzzle);
   },
 
   // Add observer to this object.
