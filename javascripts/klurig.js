@@ -1,8 +1,17 @@
+// Klurig is a HTML5 puzzle game with a simple goal: identify and color
+// matching shapes. It's also a place for me and you to learn HTML5 game
+// development and JavaScript best practicies.
+//
+// This game follows the [Model-View-Controller pattern](http://en.wikipedia.org/wiki/Model-view-controller)
+// for code organization.
+//
 // Models
 // ------
-
+//
 // ### Tile
 
+// This is not really a model, yet. It's just constants for tiles and board
+// slots.
 var Tile = {
   RED: 1,
   GREEN: 2,
@@ -14,11 +23,16 @@ var Tile = {
 
 // ### Board
 
+// The main model that represents the game board. It loads a puzzle and provides
+// a playing field.
+// Board implents the [Observer pattern](http://en.wikipedia.org/wiki/Observer_pattern)
+// to notifiy controllers and views about changes.
 var Board = function () {
   this.observers = [];
 };
 
 Board.prototype = {
+  // Get the tile at the provided position using [Algebraic notation](http://en.wikipedia.org/wiki/Algebraic_notation).
   getTile: function (position) {
     var row = position.charCodeAt(0) - 65;
     var column = position[1] - 1;
@@ -26,6 +40,8 @@ Board.prototype = {
     return this.state[row][column];
   },
 
+  // Set a tile at the provided position using [Algebraic notation](http://en.wikipedia.org/wiki/Algebraic_notation).
+  // The boards current tile color is used.
   setTile: function (position) {
     var row = position.charCodeAt(0) - 65;
     var column = position[1] - 1;
@@ -36,6 +52,7 @@ Board.prototype = {
     }
   },
 
+  // Prepares and loads a puzzle as a two-dimensional array of integers.
   prepare: function (puzzle) {
     this.puzzle = puzzle;
     this.state = JSON.parse(JSON.stringify(puzzle)); // deep copy
@@ -43,7 +60,7 @@ Board.prototype = {
 
     var colors = {};
 
-    // Reset board state to show blank tiles
+    // Reset board state to show just white tiles.
     for (var row = 0; row < this.state.length; row++) {
       for (var column = 0; column < this.state[row].length; column++) {
         if (this.state[row][column] > Tile.EMPTY) {
@@ -54,9 +71,12 @@ Board.prototype = {
     }
 
     this.colors = Object.keys(Tile).slice(0, Object.keys(colors).length);
+
     this.notifyObservers('preparedPuzzle');
   },
 
+
+  // Checks if the puzzle is solved (state equals puzzle).
   isSolved: function () {
     var normalizedState = JSON.parse(JSON.stringify(this.state)); // deep copy
 
@@ -78,10 +98,12 @@ Board.prototype = {
     return JSON.stringify(normalizedState) == JSON.stringify(this.puzzle);
   },
 
+  // Add observer to this object.
   addObserver: function (observer, context) {
     this.observers.push({block: observer, context: context || null});
   },
 
+  // Notify observers of this object about a change.
   notifyObservers: function () {
     for (var i = 0; i < this.observers.length; i++) {
       var observer = this.observers[i];
