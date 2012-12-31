@@ -27,9 +27,9 @@ var Tile = {
 // a playing field.
 // Board implents the [Observer pattern](http://en.wikipedia.org/wiki/Observer_pattern)
 // to notifiy controllers and views about changes.
-var Board = function () {
+function Board () {
   this.observers = [];
-};
+}
 
 // Get the tile at the provided position using [Algebraic notation](http://en.wikipedia.org/wiki/Algebraic_notation).
 Board.prototype.getTile = function (position) {
@@ -115,7 +115,7 @@ Board.prototype.notifyObservers = function () {
 
 // ### Board
 
-var BoardView = function (board, controller) {
+function BoardView (board, controller) {
   this.board = board;
   this.canvas = document.getElementById('board');
 
@@ -148,7 +148,7 @@ var BoardView = function (board, controller) {
       this.render();
     }
   }, this);
-};
+}
 
 BoardView.prototype.renderInitial = function () {
   // Render the initial view.
@@ -190,7 +190,7 @@ BoardView.prototype.render = function () {
 
 // ### Tile colors
 
-var TileColorsView = function (board, controller) {
+function TileColorsView (board, controller) {
   this.board = board;
   this.canvas = document.getElementById('tile-colors');
 
@@ -207,7 +207,7 @@ var TileColorsView = function (board, controller) {
       this.render();
     }
   }, this);
-};
+}
 
 TileColorsView.prototype.render = function () {
   var html = '';
@@ -219,7 +219,7 @@ TileColorsView.prototype.render = function () {
 
 // ### Puzzles
 
-var PuzzlesView = function (puzzles, controller) {
+function PuzzlesView (puzzles, controller) {
   this.canvas = document.getElementById('puzzles');
 
   var html = '';
@@ -231,15 +231,15 @@ var PuzzlesView = function (puzzles, controller) {
   window.addEventListener('hashchange', function () {
     controller.prepareBoard(window.location.hash.match(/\d/g)[0] - 1);
   });
-};
+}
 
 // Controller
 // ----------
 
-var GameController = function (puzzles, board) {
+function GameController (puzzles, board) {
   this.puzzles = puzzles;
   this.board = board;
-};
+}
 
 GameController.prototype.handleInteraction = function (position) {
   this.board.setTile(position);
