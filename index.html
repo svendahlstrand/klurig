@@ -8,9 +8,12 @@
     <title>Klurig</title>
   </head>
   <body>
-    <div id="board"></div>
-    <ul id="tile-colors"></ul>
     <ul id="puzzles"></ul>
+    <div id="game">
+      <a href="#" id="puzzles-button" onclick="document.getElementsByTagName('body')[0].classList.toggle('puzzles-active');">Puzzles</a>
+      <div id="board"></div>
+      <ul id="tile-colors"></ul>
+    </div>
   </body>
   <script>
     // Disable scroll
