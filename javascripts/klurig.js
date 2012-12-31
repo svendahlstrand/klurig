@@ -25,11 +25,7 @@ var Tile = {
 
 // The main model that represents the game board. It loads a puzzle and provides
 // a playing field.
-// Board implents the [Observer pattern](http://en.wikipedia.org/wiki/Observer_pattern)
-// to notifiy controllers and views about changes.
-function Board () {
-  this.observers = [];
-}
+function Board () {}
 
 // Get the tile at the provided position using [Algebraic notation](http://en.wikipedia.org/wiki/Algebraic_notation).
 Board.prototype.getTile = function (position) {
@@ -74,7 +70,6 @@ Board.prototype.prepare = function (puzzle) {
   this.notifyObservers('preparedPuzzle');
 };
 
-
 // Checks if the puzzle is solved (state equals puzzle).
 Board.prototype.isSolved = function () {
   var normalizedState = utils.deepCopy(this.state);
@@ -97,18 +92,9 @@ Board.prototype.isSolved = function () {
   return utils.equals(normalizedState, this.puzzle);
 };
 
-// Add observer to this object.
-Board.prototype.addObserver = function (observer, context) {
-  this.observers.push({block: observer, context: context || null});
-};
-
-// Notify observers of this object about a change.
-Board.prototype.notifyObservers = function () {
-  for (var i = 0; i < this.observers.length; i++) {
-    var observer = this.observers[i];
-    observer.block.apply(observer.context, arguments);
-  }
-};
+// Board implents the [Observer pattern](http://en.wikipedia.org/wiki/Observer_pattern)
+// to notifiy controllers and views about changes.
+Observerable.mixin(Board.prototype);
 
 // Views
 // -----
