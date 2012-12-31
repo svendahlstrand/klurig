@@ -217,13 +217,18 @@ function PuzzlesView (puzzles, controller) {
 
   window.addEventListener('hashchange', function () {
     controller.prepareBoard(PuzzlesView.selectedPuzzle());
+    PuzzlesView.togglePuzzlesSelction();
   });
 
   this.puzzslesButton.addEventListener('click', function (event) {
-    document.getElementsByTagName('body')[0].classList.toggle('puzzles-active');
+    PuzzlesView.togglePuzzlesSelction();
     event.preventDefault();
   });
 }
+
+PuzzlesView.togglePuzzlesSelction = function () {
+  document.getElementsByTagName('body')[0].classList.toggle('puzzles-active');
+};
 
 PuzzlesView.selectedPuzzle = function () {
   var selectedPuzzle = window.location.hash.match(/\d/g);
