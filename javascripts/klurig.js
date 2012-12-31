@@ -207,6 +207,7 @@ TileColorsView.prototype.render = function () {
 
 function PuzzlesView (puzzles, controller) {
   this.canvas = document.getElementById('puzzles');
+  this.puzzslesButton = document.getElementById('puzzles-button');
 
   var html = '';
   for (var i = 0; i < puzzles.length; i++) {
@@ -216,6 +217,11 @@ function PuzzlesView (puzzles, controller) {
 
   window.addEventListener('hashchange', function () {
     controller.prepareBoard(PuzzlesView.selectedPuzzle());
+  });
+
+  this.puzzslesButton.addEventListener('click', function (event) {
+    document.getElementsByTagName('body')[0].classList.toggle('puzzles-active');
+    event.preventDefault();
   });
 }
 
