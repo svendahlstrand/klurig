@@ -215,9 +215,15 @@ function PuzzlesView (puzzles, controller) {
   this.canvas.innerHTML = html;
 
   window.addEventListener('hashchange', function () {
-    controller.prepareBoard(window.location.hash.match(/\d/g)[0] - 1);
+    controller.prepareBoard(PuzzlesView.selectedPuzzle());
   });
 }
+
+PuzzlesView.selectedPuzzle = function () {
+  var selectedPuzzle = window.location.hash.match(/\d/g);
+
+  return (selectedPuzzle || 1) - 1;
+};
 
 // Controller
 // ----------
@@ -251,5 +257,5 @@ GameController.prototype.prepareBoard = function (number) {
   new TileColorsView(board, gameController);
   new PuzzlesView(PUZZLES, gameController);
 
-  gameController.prepareBoard(0);
+  gameController.prepareBoard(PuzzlesView.selectedPuzzle());
 })();
