@@ -43,7 +43,7 @@ Board.prototype.setTile = function (position) {
 
   if (this.state[row][column] != Tile.EMPTY) {
     this.state[row][column] = this.currentTileColor;
-    this.notifyObservers();
+    this.notifyObservers('boardUpdated');
   }
 };
 
@@ -126,13 +126,12 @@ function BoardView (board, controller) {
   this.canvas.addEventListener('touchmove', handleInteraction);
 
   // Listen for updates on the model.
-  this.board.addObserver(function (event) {
-    if (event == 'preparedPuzzle') {
-      this.renderInitial();
-    }
-    else {
-      this.render();
-    }
+  this.board.addObserver('preparedPuzzle', function () {
+    this.renderInitial();
+  }, this);
+
+  this.board.addObserver('boardUpdated', function () {
+    this.render();
   }, this);
 }
 
@@ -188,10 +187,8 @@ function TileColorsView (board, controller) {
     event.preventDefault();
   });
 
-  this.board.addObserver(function (event) {
-    if (event == 'preparedPuzzle') {
-      this.render();
-    }
+  this.board.addObserver('preparedPuzzle', function () {
+    this.render();
   }, this);
 }
 

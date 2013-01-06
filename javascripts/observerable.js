@@ -1,15 +1,16 @@
 function Observerable () {}
 
-Observerable.prototype.addObserver = function (observer, context) {
+Observerable.prototype.addObserver = function (type, observer, context) {
   this.observers = this.observers || [];
-  this.observers.push({block: observer, context: context || null});
+  this.observers.push({ type: type, block: observer, context: context || null });
 };
 
-Observerable.prototype.notifyObservers = function () {
-  for (var i = 0; i < (this.observers || []).length; i++) {
-    var observer = this.observers[i];
-    observer.block.apply(observer.context, arguments);
-  }
+Observerable.prototype.notifyObservers = function (type) {
+  this.observers.forEach(function (observer) {
+    if (type == observer.type) {
+      observer.block.apply(observer.context);
+    }
+  });
 };
 
 Observerable.mixin = function (target) {
